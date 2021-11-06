@@ -1,0 +1,30 @@
+// Standart font and line-height
+
+@mixin fs($property) {
+    font-size: $property + px;
+    line-height: $property + 10 + px;
+}
+
+
+// Custom font and line height
+@mixin fc($property, $value) {
+  font-size: $property + px;
+  line-height: $property + $value + px;
+}
+
+// transition animation
+@mixin tr($time, $type){
+  transition-duration: $time+s;
+  @if $type == es{ 
+    transition-timing-function: ease-in-out;
+  }
+  @if $type == ln{ 
+    transition-timing-function: linear;
+  }
+  @if $type == sf{ 
+    transition-timing-function: cubic-bezier(0.42,0,1,1);
+  }
+  @if $type == fs{ 
+    transition-timing-function: cubic-bezier(0,0,0.58,1);
+  }
+}
