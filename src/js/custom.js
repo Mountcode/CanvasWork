@@ -8,18 +8,11 @@ function clearCanvas (canvas){
 canvas.width = 500;
 canvas.height = 500;
 
-main();
+requestAnimationFrame(tick);
 
-async function main(){
-    const image = await loadImage("/src/img/logo.png");
+
+function tick(timestamp){
+    requestAnimationFrame(tick)
+    
+    
 }
-
-function loadImage(src) {
-    return new Promise((resolve) =>{
-        const image = new Image();
-        image.src = src;
-        image.onload = () => resolve(image);
-    })
-}
-
-
