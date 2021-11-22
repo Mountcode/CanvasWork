@@ -1,13 +1,16 @@
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext("2d");
 
-canvas.width = 500;
-canvas.height = 500;
+let windowWidth = window.innerWidth,
+	widnowHeight = window.innerHeight;
+
+canvas.width = windowWidth;
+canvas.height = widnowHeight;
 
 const triangle = {
+	radius: 50,
 	centerX: canvas.width / 2,
 	centerY: canvas.height / 2,
-	radius: 200,
 	angle: 0,
 	angleSpeed: Math.PI * 0.5,
 };
@@ -20,25 +23,27 @@ function animation(params) {
 
     function tick(timestamp) {
         requestAnimationFrame(tick);
-
+		
         const diff = timestamp - pTimestamp;
-        const fps = 1000 / diff;
-        const secondPart = diff / 1000;
+        const fps = 30000 / diff;
+        const secondPart = diff / 30000;
         pTimestamp = timestamp;
 
-        const params = {
+        
+		const params = {
             diff,
             timestamp,
             pTimestamp,
             fps,
             secondPart,
         };
-
+		
         update(params);
         clear();
         render(params);
     }
 }
+
 
 animation({
 	update({ secondPart }) {
@@ -48,7 +53,7 @@ animation({
 	clear() {
 		context.beginPath();
 		context.rect(0, 0, canvas.width, canvas.height);
-		context.fillStyle = "gray";
+		context.fillStyle = "#ddd";
 		context.fill();
 	},
 
@@ -70,7 +75,7 @@ animation({
 			triangle.centerY + triangle.radius * Math.sin(triangle.angle + 2 * dAngle)
 		);
 		context.closePath();
-		context.fillStyle = "red";
+		context.fillStyle = "#efefef";
 		context.fill();
 	},
 });
