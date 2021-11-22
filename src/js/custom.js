@@ -2,17 +2,15 @@ const canvas = document.querySelector("canvas");
 const context = canvas.getContext("2d");
 
 let windowWidth = window.innerWidth,
-	widnowHeight = window.innerHeight;
+	windowHeight = window.innerHeight;
 
 canvas.width = windowWidth;
-canvas.height = widnowHeight;
+canvas.height = windowHeight;
 
-const triangle = {
-	radius: 50,
-	centerX: canvas.width / 2,
-	centerY: canvas.height / 2,
-	angle: 0,
-	angleSpeed: Math.PI * 0.5,
+const dot = {
+	rand: 0,
+	posY: windowWidth / 2,
+	posX: windowHeight / 2
 };
 
 function animation(params) {
@@ -20,13 +18,15 @@ function animation(params) {
     let pTimestamp = 0;
 
     requestAnimationFrame(tick);
-
+	
     function tick(timestamp) {
-        requestAnimationFrame(tick);
+		if(timestamp < 4000){
+			requestAnimationFrame(tick);
+		}
 		
         const diff = timestamp - pTimestamp;
-        const fps = 30000 / diff;
-        const secondPart = diff / 30000;
+        const fps = 6000 / diff;
+        const secondPart = diff / 6000;
         pTimestamp = timestamp;
 
         
@@ -38,44 +38,40 @@ function animation(params) {
             secondPart,
         };
 		
+
         update(params);
         clear();
         render(params);
+
     }
 }
 
-
 animation({
 	update({ secondPart }) {
-		triangle.angle += triangle.angleSpeed * secondPart;
+		dot.rand = Math.random().toFixed(2);
+		if(dot.rand > 0.5 && dot.posY >= windowHeight){	
+			dot.posX--
+		}
 	},
-
 	clear() {
 		context.beginPath();
 		context.rect(0, 0, canvas.width, canvas.height);
 		context.fillStyle = "#ddd";
 		context.fill();
 	},
-
 	render() {
-		const dAngle = (Math.PI / 3) * 4;
-
 		context.beginPath();
-		context.moveTo(
-			triangle.centerX + triangle.radius * Math.cos(triangle.angle),
-			triangle.centerY + triangle.radius * Math.sin(triangle.angle)
-		);
-		context.lineTo(
-			triangle.centerX + triangle.radius * Math.cos(triangle.angle + dAngle),
-			triangle.centerY + triangle.radius * Math.sin(triangle.angle + dAngle)
-		);
-		context.lineTo(
-			triangle.centerX +
-				triangle.radius * Math.cos(triangle.angle + 2 * dAngle),
-			triangle.centerY + triangle.radius * Math.sin(triangle.angle + 2 * dAngle)
-		);
-		context.closePath();
-		context.fillStyle = "#efefef";
+
+		const degreesToRadians = (n) => (n / 360) * 2 * Math.PI;
+
+		context.arc(
+			dot.posY,dot.posX,
+			10,
+			degreesToRadians(0),degreesToRadians(360),
+		)
+	
+		context.fillStyle = '#444';
 		context.fill();
+		context.closePath();
 	},
 });
