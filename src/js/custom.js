@@ -10,8 +10,14 @@ canvas.height = windowHeight;
 const dot = {
 	rand: 0,
 	posY: windowWidth / 2,
-	posX: windowHeight / 2
+	posX: windowHeight / 2,
+	radius: 10,
+	loopTime: 2000,
+	reverse: 1,
+	easeSpeed: 0.001,
+	boost: 0
 };
+
 
 function animation(params) {
     const { update, render, clear } = params;
@@ -25,11 +31,10 @@ function animation(params) {
 		}
 		
         const diff = timestamp - pTimestamp;
-        const fps = 6000 / diff;
+        const fps = 35 / diff;
         const secondPart = diff / 6000;
         pTimestamp = timestamp;
 
-        
 		const params = {
             diff,
             timestamp,
@@ -38,19 +43,30 @@ function animation(params) {
             secondPart,
         };
 		
-
         update(params);
         clear();
         render(params);
-
+ 
     }
 }
 
 animation({
-	update({ secondPart }) {
+	update({timestamp, secondPart }) {
+		
 		dot.rand = Math.random().toFixed(2);
-		if(dot.rand > 0.5 && dot.posY >= windowHeight){	
-			dot.posX--
+
+		if(dot.reverse < dot.loopTime){
+			dot.radius += dot.radius * secondPart + dot.boost;
+			dot.reverse = 1;
+			dot.boost += 0.1;
+		}
+		if(dot.reverse == 0){
+			dot.reverse = 1;
+		}
+		else{
+			dot.radius += dot.radius * secondPart - dot.boost;
+			dot.reverse--;
+			dot.boost -= 0.1
 		}
 	},
 	clear() {
@@ -61,15 +77,12 @@ animation({
 	},
 	render() {
 		context.beginPath();
-
 		const degreesToRadians = (n) => (n / 360) * 2 * Math.PI;
-
 		context.arc(
 			dot.posY,dot.posX,
-			10,
+			dot.radius,
 			degreesToRadians(0),degreesToRadians(360),
 		)
-	
 		context.fillStyle = '#444';
 		context.fill();
 		context.closePath();
