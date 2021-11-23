@@ -11,11 +11,11 @@ const dot = {
 	rand: 0,
 	posY: windowWidth / 2,
 	posX: windowHeight / 2,
-	radius: 10,
-	loopTime: 2000,
-	reverse: 1,
+	radius: 0,
+	loopTime: 80,
 	easeSpeed: 0.001,
-	boost: 0
+	reverse: 0,
+	backward: 0,
 };
 
 
@@ -26,7 +26,7 @@ function animation(params) {
     requestAnimationFrame(tick);
 	
     function tick(timestamp) {
-		if(timestamp < 4000){
+		if(timestamp < 8000){
 			requestAnimationFrame(tick);
 		}
 		
@@ -46,27 +46,22 @@ function animation(params) {
         update(params);
         clear();
         render(params);
- 
     }
 }
 
 animation({
 	update({timestamp, secondPart }) {
-		
 		dot.rand = Math.random().toFixed(2);
-
-		if(dot.reverse < dot.loopTime){
-			dot.radius += dot.radius * secondPart + dot.boost;
-			dot.reverse = 1;
-			dot.boost += 0.1;
+		if(!dot.backward){
+			dot.radius += 0.3
+			dot.reverse++;
+			console.log(dot.reverse);
+			dot.backward = (dot.reverse > dot.loopTime) ? 1 : 0;
 		}
-		if(dot.reverse == 0){
-			dot.reverse = 1;
-		}
-		else{
-			dot.radius += dot.radius * secondPart - dot.boost;
+		else if(dot.backward){
+			dot.radius -= 0.3
 			dot.reverse--;
-			dot.boost -= 0.1
+			dot.backward = (dot.reverse == 1) ? 0 : 1;
 		}
 	},
 	clear() {
